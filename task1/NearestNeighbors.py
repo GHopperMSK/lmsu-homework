@@ -1,3 +1,4 @@
+import Distances
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
@@ -29,10 +30,26 @@ class KNNClassifier:
     
     def find_kneighbors(self, X, return_distance = True):
         if (self.strategy == 'my_own'):
-            if (return_distance):
-                return (np.zeros(len(X)*self.k).astype(int).reshape(len(X), self.k), np.zeros(len(X)*self.k).astype(int).reshape(len(X), self.k))
+            
+            res = []
+            dists = []
+
+            if (self.metric == 'euclidean'):
+                dsModRes = Distances.euclidean_distance(X, self.X)
             else:
-                return (np.zeros(len(X)*self.k).reshape(len(X), k))
+                dsModRes = Distances.cosine_distance(X, self.X)
+
+            for i in range(len(dsModRes)):
+                tmpDists = np.argsort(dsModRes[i])[:self.k]
+                res.append(dsModRes[i][tmpDists])
+                if (return_distance):
+                    dists.append(tmpDists)
+                    
+            if (return_distance):
+                return (res, dists)
+            else:
+                return (res)
+            
         else:
             return self.neigh.kneighbors(X, return_distance = return_distance)
 
