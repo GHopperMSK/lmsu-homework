@@ -19,7 +19,7 @@ class KNNClassifier:
         self.testBlockSize = test_block_size
         
         if (self.strategy != 'my_own'):
-            self.neigh = NearestNeighbors(self.k, algorithm = self.strategy)
+            self.neigh = NearestNeighbors(self.k, algorithm = self.strategy, metric = 'euclidean')
  
     def fit(self, X, y):
         if (self.strategy == 'my_own'):
